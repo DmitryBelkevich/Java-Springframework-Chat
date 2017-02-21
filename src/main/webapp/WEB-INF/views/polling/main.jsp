@@ -18,6 +18,7 @@
 <p>online:</p>
 <div id="online"></div>
 
+<p>messages:</p>
 <div id="content"></div>
 <form class="form" role="form">
 	<div id="">
