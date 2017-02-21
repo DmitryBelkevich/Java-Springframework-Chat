@@ -2,7 +2,7 @@ $(document).ready(function() {
 	
 });
 
-/** --- default --- */
+/** --- default-settings --- */
 
 /*
  * focus to textField
@@ -33,13 +33,6 @@ function clearInputField() {
 }
 
 /*
- * play Sound
- */
-function playSound() {
-	
-}
-
-/*
  * scroll to bottom
  */
 function scrollToBottom(elementId) {
@@ -48,6 +41,13 @@ function scrollToBottom(elementId) {
 	
 	if (frame.scrollTop >= (frame.scrollHeight - frame.offsetHeight - magnet))
 		frame.scrollTop = frame.scrollHeight - frame.offsetHeight;
+}
+
+/*
+ * play Sound
+ */
+function playSound() {
+	// TODO
 }
 
 /** --- Ajax --- */
@@ -148,7 +148,7 @@ function close() {
 }
 
 /*
- * set typing
+ * set typing client
  */
 function setTyping(b) {
 	$.ajax({
