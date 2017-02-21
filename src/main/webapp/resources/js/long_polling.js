@@ -57,7 +57,7 @@ function playSound() {
  */
 function sendMessage(message) {
 	$.ajax({
-		url: "polling/sendMessage",
+		url: "long_polling/sendMessage",
 		type: "POST",
 		data: message,
 		contentType : "application/json; charset=UTF-8",
@@ -77,7 +77,7 @@ function sendMessage(message) {
  */
 function getMessages() {
 	$.ajax({
-		url: "polling/getMessages",
+		url: "long_polling/getMessages",
 		type: "POST",
 		//cache: false,
 		success: function(data) {
@@ -85,6 +85,8 @@ function getMessages() {
 				printMessages(data);
 				playSound();
 				scrollToBottom("content");
+				
+				getMessages();
 			}
 		},
 		error : function(xhr, status, errorThrown) {
@@ -98,12 +100,14 @@ function getMessages() {
  */
 function showOnline() {
 	$.ajax({
-		url: "polling/showOnline",
+		url: "long_polling/showOnline",
 		type: "POST",
 		//cache: false,
 		success: function(data) {
 			if (data != 0) {
 				$("#online").html(data);
+				
+				//setTimeout('showOnline()', 1000);
 			}
 		},
 		error : function(xhr, status, errorThrown) {
@@ -117,12 +121,14 @@ function showOnline() {
  */
 function showTyping() {
 	$.ajax({
-		url: "polling/showTyping",
+		url: "long_polling/showTyping",
 		type: "POST",
 		//cache: false,
 		success: function(data) {
 			if (data != 0) {
 				$("#typing").html(data);
+				
+				setTimeout('showTyping()', 1000);//showTyping();
 			} else {
 				$("#typing").empty();
 			}
@@ -138,7 +144,7 @@ function showTyping() {
  */
 function close() {
 	$.ajax({
-		url: "polling/close",
+		url: "long_polling/close",
 		type: "POST",
 		//cache: false,
 		error : function(xhr, status, errorThrown) {
@@ -152,7 +158,7 @@ function close() {
  */
 function setTyping(b) {
 	$.ajax({
-		url: "polling/setTyping",
+		url: "long_polling/setTyping",
 		type: "POST",
 		data: b,
 		contentType : "application/json; charset=UTF-8",
@@ -203,13 +209,6 @@ $("#inputField").keypress(function() {
 
 /** --- Invoke Polling --- */
 
-var poolGetMessages = 1000 * 1;
-var poolShowOnline = 1000 * 5;
-var poolShowTyping = 1000 * 1;
-
 getMessages();
 showOnline();
 showTyping();
-setInterval('getMessages()', poolGetMessages);
-setInterval('showOnline()', poolShowOnline);
-setInterval('showTyping()', poolShowTyping);
