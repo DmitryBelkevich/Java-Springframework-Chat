@@ -94,22 +94,26 @@ public class PollingController {
 	@RequestMapping(value = "/showTyping", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public String showTyping() {
-		List<Client> clients = new ArrayList<>();
+		List<Client> clients = textChat.getClients();
 		
-		for (Client client : textChat.getClients())
-			if (client.isTyping())
-				clients.add(client);
-		
-		StringBuilder clientsBuilder = new StringBuilder();
-		
-		if (clients.size() > 0) {
-			for (Client client : clients) {
-				clientsBuilder
-					.append(new ParagraphDecorator(new StringComponent(client.getName())).getStr())
-					;
-			}
+		if (clients != null) {
+			List<Client> typingClients = new ArrayList<>();
 			
-			return clientsBuilder.toString();
+			for (Client client : clients)
+				if (client.isTyping())
+					typingClients.add(client);
+			
+			StringBuilder clientsBuilder = new StringBuilder();
+			
+			if (typingClients.size() > 0) {
+				for (Client client : typingClients) {
+					clientsBuilder
+						.append(new ParagraphDecorator(new StringComponent("<i class='fa fa-spinner fa-pulse fa-1g fa-fw'></i>" + client.getName())).getStr())
+						;
+				}
+				
+				return clientsBuilder.toString();
+			}
 		}
 		
 		return null;
@@ -126,6 +130,15 @@ public class PollingController {
 			
 			return "client has deleted";
 		}
+		
+		return null;
+	}
+	
+	@RequestMapping(value = "/setTyping", method = { RequestMethod.GET, RequestMethod.POST }, consumes = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String setTyping(HttpSession session, @RequestBody String b) {
+		Client client = textChat.getClientBySession(session);
+		client.setTyping(Boolean.valueOf(b));
 		
 		return null;
 	}
