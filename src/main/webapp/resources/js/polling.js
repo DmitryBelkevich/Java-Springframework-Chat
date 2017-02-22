@@ -33,6 +33,27 @@ function clearInputField() {
 }
 
 /*
+ * show active clients
+ */
+function showActiveClients(data) {
+	$("#onlineClients").html(data);
+}
+
+/*
+ * show typing clients
+ */
+function showTypingClients(data) {
+	$("#typingClients").html(data);
+}
+
+/*
+ * clear typing clients
+ */
+function clearTypingClients() {
+	$("#typingClients").empty();
+}
+
+/*
  * scroll to bottom
  */
 function scrollToBottom(elementId) {
@@ -94,16 +115,16 @@ function getMessages() {
 }
 
 /*
- * show active clients
+ * get active clients
  */
-function showOnline() {
+function getActiveClients() {
 	$.ajax({
-		url: "polling/showOnline",
+		url: "polling/getActiveClients",
 		type: "POST",
 		//cache: false,
 		success: function(data) {
 			if (data != 0) {
-				$("#online").html(data);
+				showActiveClients(data);
 			}
 		},
 		error : function(xhr, status, errorThrown) {
@@ -113,18 +134,18 @@ function showOnline() {
 }
 
 /*
- * show typing clients
+ * get typing clients
  */
-function showTyping() {
+function getTypingClients() {
 	$.ajax({
-		url: "polling/showTyping",
+		url: "polling/getTypingClients",
 		type: "POST",
 		//cache: false,
 		success: function(data) {
 			if (data != 0) {
-				$("#typing").html(data);
+				showTypingClients(data);
 			} else {
-				$("#typing").empty();
+				clearTypingClients();
 			}
 		},
 		error : function(xhr, status, errorThrown) {
@@ -187,14 +208,14 @@ $("#inputField").keypress(function(event) {
 });
 
 /*
- * if close window then delete client
+ * if to close window then delete client
  */
 window.onbeforeunload = function(event) {
 	close();
 }
 
 /*
- * if to input-field to write characters then set typing client
+ * if to write characters into input-field then set typing client
  */
 $("#inputField").keypress(function() {
 	setTyping("true");
@@ -204,12 +225,12 @@ $("#inputField").keypress(function() {
 /** --- Invoke Polling --- */
 
 var poolGetMessages = 1000 * 1;
-var poolShowOnline = 1000 * 5;
-var poolShowTyping = 1000 * 1;
+var poolGetActiveClients = 1000 * 5;
+var poolGetTypingClients = 1000 * 1;
 
 getMessages();
-showOnline();
-showTyping();
+getActiveClients();
+getTypingClients();
 setInterval('getMessages()', poolGetMessages);
-setInterval('showOnline()', poolShowOnline);
-setInterval('showTyping()', poolShowTyping);
+setInterval('getActiveClients()', poolGetActiveClients);
+setInterval('getTypingClients()', poolGetTypingClients);

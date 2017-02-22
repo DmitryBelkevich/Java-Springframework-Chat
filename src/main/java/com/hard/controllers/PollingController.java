@@ -36,7 +36,11 @@ public class PollingController {
 		return "polling/main";
 	}
 	
-	@RequestMapping(value = "/sendMessage", method = { RequestMethod.GET, RequestMethod.POST }, consumes = "application/json; charset=UTF-8")
+	@RequestMapping(
+		value = "/sendMessage",
+		method = { RequestMethod.GET, RequestMethod.POST },
+		consumes = "application/json; charset=UTF-8"
+	)
 	@ResponseBody
 	public String sendMessage(HttpSession session, @RequestBody String message) {
 		Client client = textChat.getClientBySession(session);
@@ -50,7 +54,11 @@ public class PollingController {
 		return null;
 	}
 	
-	@RequestMapping(value = "/getMessages", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(
+		value = "/getMessages",
+		method = { RequestMethod.GET, RequestMethod.POST },
+		produces = "text/plain; charset=Windows-1251"
+	)
 	@ResponseBody
 	public String getMessages(HttpSession session) {
 		Client client = textChat.getClientBySession(session);
@@ -71,9 +79,13 @@ public class PollingController {
 		return null;
 	}
 	
-	@RequestMapping(value = "/showOnline", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(
+		value = "/getActiveClients",
+		method = { RequestMethod.GET, RequestMethod.POST },
+		produces = "text/plain; charset=Windows-1251"
+	)
 	@ResponseBody
-	public String showOnline() {
+	public String getActiveClients() {
 		List<Client> clients = textChat.getClients();
 		
 		StringBuilder clientsBuilder = new StringBuilder();
@@ -91,9 +103,13 @@ public class PollingController {
 		return null;
 	}
 	
-	@RequestMapping(value = "/showTyping", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(
+		value = "/getTypingClients",
+		method = { RequestMethod.GET, RequestMethod.POST },
+		produces = "text/plain; charset=Windows-1251"
+	)
 	@ResponseBody
-	public String showTyping() {
+	public String getTypingClients() {
 		List<Client> clients = textChat.getClients();
 		
 		if (clients != null) {
@@ -134,7 +150,11 @@ public class PollingController {
 		return null;
 	}
 	
-	@RequestMapping(value = "/setTyping", method = { RequestMethod.GET, RequestMethod.POST }, consumes = "application/json; charset=UTF-8")
+	@RequestMapping(
+		value = "/setTyping",
+		method = { RequestMethod.GET, RequestMethod.POST },
+		consumes = "application/json; charset=UTF-8"
+	)
 	@ResponseBody
 	public String setTyping(HttpSession session, @RequestBody String b) {
 		Client client = textChat.getClientBySession(session);

@@ -16,7 +16,7 @@
 <t:template>
 
 <p>online:</p>
-<div id="online"></div>
+<div id="onlineClients"></div>
 
 <p>messages:</p>
 <div id="content"></div>
@@ -28,7 +28,7 @@
 </form>
 
 <p>typing:</p>
-<div id="typing"></div>
+<div id="typingClients"></div>
 
 <script type="text/javascript" src="${pollingJs}"></script>
 

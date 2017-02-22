@@ -36,7 +36,9 @@ public class LongPollingController {
 		return "long_polling/main";
 	}
 	
-	@RequestMapping(value = "/sendMessage", method = { RequestMethod.GET, RequestMethod.POST }, consumes = "application/json; charset=UTF-8")
+	@RequestMapping(
+		value = "/sendMessage", method = { RequestMethod.GET, RequestMethod.POST }, consumes = "application/json; charset=UTF-8"
+	)
 	@ResponseBody
 	public String sendMessage(HttpSession session, @RequestBody String message) {
 		Client client = textChat.getClientBySession(session);
