@@ -33,6 +33,27 @@ function clearInputField() {
 }
 
 /*
+ * show active clients
+ */
+function showActiveClients(data) {
+	$("#onlineClients").html(data);
+}
+
+/*
+ * show typing clients
+ */
+function showTypingClients(data) {
+	$("#typingClients").html(data);
+}
+
+/*
+ * clear typing clients
+ */
+function clearTypingClients() {
+	$("#typingClients").empty();
+}
+
+/*
  * scroll to bottom
  */
 function scrollToBottom(elementId) {
@@ -63,7 +84,7 @@ function sendMessage(message) {
 		contentType : "application/json; charset=UTF-8",
 		//cache: false,
 		success: function(data) {
-			getMessages();
+			//getMessages();
 			clearInputField();
 		},
 		error : function(xhr, status, errorThrown) {
@@ -85,9 +106,9 @@ function getMessages() {
 				printMessages(data);
 				playSound();
 				scrollToBottom("content");
-				
-				getMessages();
 			}
+			
+			getMessages();
 		},
 		error : function(xhr, status, errorThrown) {
 			//alert("sending failed with status: " + status + ". " + errorThrown);
@@ -96,19 +117,19 @@ function getMessages() {
 }
 
 /*
- * show active clients
+ * get active clients
  */
-function showOnline() {
+function getActiveClients() {
 	$.ajax({
-		url: "long_polling/showOnline",
+		url: "long_polling/getActiveClients",
 		type: "POST",
 		//cache: false,
 		success: function(data) {
 			if (data != 0) {
-				$("#online").html(data);
-				
-				//setTimeout('showOnline()', 1000);
+				showActiveClients(data);
 			}
+			
+			getActiveClients();
 		},
 		error : function(xhr, status, errorThrown) {
 			//alert("sending failed with status: " + status + ". " + errorThrown);
@@ -117,21 +138,21 @@ function showOnline() {
 }
 
 /*
- * show typing clients
+ * get typing clients
  */
-function showTyping() {
+function getTypingClients() {
 	$.ajax({
-		url: "long_polling/showTyping",
+		url: "long_polling/getTypingClients",
 		type: "POST",
 		//cache: false,
 		success: function(data) {
 			if (data != 0) {
-				$("#typing").html(data);
-				
-				setTimeout('showTyping()', 1000);//showTyping();
+				showTypingClients(data);
 			} else {
-				$("#typing").empty();
+				clearTypingClients();
 			}
+			
+			getTypingClients();
 		},
 		error : function(xhr, status, errorThrown) {
 			//alert("sending failed with status: " + status + ". " + errorThrown);
@@ -193,14 +214,14 @@ $("#inputField").keypress(function(event) {
 });
 
 /*
- * if close window then delete client
+ * if to close window then delete client
  */
 window.onbeforeunload = function(event) {
 	close();
 }
 
 /*
- * if to input-field to write characters then set typing client
+ * if to write characters into input-field then set typing client
  */
 $("#inputField").keypress(function() {
 	setTyping("true");
@@ -210,5 +231,5 @@ $("#inputField").keypress(function() {
 /** --- Invoke Polling --- */
 
 getMessages();
-showOnline();
-showTyping();
+getActiveClients();
+getTypingClients();

@@ -37,7 +37,9 @@ public class LongPollingController {
 	}
 	
 	@RequestMapping(
-		value = "/sendMessage", method = { RequestMethod.GET, RequestMethod.POST }, consumes = "application/json; charset=UTF-8"
+		value = "/sendMessage",
+		method = { RequestMethod.GET, RequestMethod.POST },
+		consumes = "application/json; charset=UTF-8"
 	)
 	@ResponseBody
 	public String sendMessage(HttpSession session, @RequestBody String message) {
@@ -52,12 +54,23 @@ public class LongPollingController {
 		return null;
 	}
 	
-	@RequestMapping(value = "/getMessages", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(
+		value = "/getMessages",
+		method = { RequestMethod.GET, RequestMethod.POST },
+		produces = "text/plain; charset=Windows-1251"
+	)
 	@ResponseBody
 	public String getMessages(HttpSession session) {
 		Client client = textChat.getClientBySession(session);
 		
 		if (client != null) {
+			while (client.getMessages().isEmpty())
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			
 			List<Message> messages = client.getMessages();
 			
 			StringBuilder messageBuilder = new StringBuilder();
@@ -73,14 +86,24 @@ public class LongPollingController {
 		return null;
 	}
 	
-	@RequestMapping(value = "/showOnline", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(
+		value = "/getActiveClients",
+		method = { RequestMethod.GET, RequestMethod.POST },
+		produces = "text/plain; charset=Windows-1251"
+	)
 	@ResponseBody
-	public String showOnline() {
+	public String getActiveClients() {
 		List<Client> clients = textChat.getClients();
 		
 		StringBuilder clientsBuilder = new StringBuilder();
 		
 		if (clients != null) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 			for (Client client : clients) {
 				clientsBuilder
 					.append(new ParagraphDecorator(new StringComponent(client.getName())).getStr())
@@ -93,12 +116,22 @@ public class LongPollingController {
 		return null;
 	}
 	
-	@RequestMapping(value = "/showTyping", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(
+		value = "/getTypingClients",
+		method = { RequestMethod.GET, RequestMethod.POST },
+		produces = "text/plain; charset=Windows-1251"
+	)
 	@ResponseBody
-	public String showTyping() {
+	public String getTypingClients() {
 		List<Client> clients = textChat.getClients();
 		
 		if (clients != null) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 			List<Client> typingClients = new ArrayList<>();
 			
 			for (Client client : clients)
@@ -136,7 +169,11 @@ public class LongPollingController {
 		return null;
 	}
 	
-	@RequestMapping(value = "/setTyping", method = { RequestMethod.GET, RequestMethod.POST }, consumes = "application/json; charset=UTF-8")
+	@RequestMapping(
+		value = "/setTyping",
+		method = { RequestMethod.GET, RequestMethod.POST },
+		consumes = "application/json; charset=UTF-8"
+	)
 	@ResponseBody
 	public String setTyping(HttpSession session, @RequestBody String b) {
 		Client client = textChat.getClientBySession(session);
